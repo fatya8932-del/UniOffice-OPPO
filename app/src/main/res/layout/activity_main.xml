@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://android.com"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#E0E4E8">
+
+    <!-- แถบเครื่องมือด้านบน (Toolbar) -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1A56DB"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UniOffice"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginEnd="16dp" />
+
+            <Button
+                android:id="@+id/btnModeType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⌨️ โหมดพิมพ์"
+                android:backgroundTint="#FFFFFF"
+                android:textColor="#1A56DB"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnModeDraw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✏️ โหมดปากกา"
+                android:backgroundTint="#3B82F6"
+                android:textColor="#FFFFFF"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnPenColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🎨 สีหมึก: น้ำเงิน"
+                android:backgroundTint="#3B82F6"
+                android:textColor="#FFFFFF"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnClearDraw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🧹 ลบเส้นปากกา"
+                android:backgroundTint="#EF4444"
+                android:textColor="#FFFFFF"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnExportPdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📄 บันทึก PDF"
+                android:backgroundTint="#10B981"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- พื้นที่หน้ากระดาษ A4 จำลอง -->
+    <FrameLayout
+        android:id="@+id/documentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:background="#FFFFFF"
+        android:elevation="4dp">
+
+        <!-- เลเยอร์ 1: พื้นที่พิมพ์ข้อความ -->
+        <EditText
+            android:id="@+id/etDocument"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:gravity="top|start"
+            android:hint="พิมพ์รายงานหรือเลกเชอร์ที่นี่..."
+            android:lineSpacingMultiplier="1.2"
+            android:padding="32dp"
+            android:textColor="#111827"
+            android:textSize="18sp" />
+
+        <!-- เลเยอร์ 2: กระดานวาดเขียนสำหรับปากกา OPPO Pencil -->
+        <com.unioffice.oppopad.StylusCanvasView
+            android:id="@+id/stylusCanvas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+</LinearLayout>
