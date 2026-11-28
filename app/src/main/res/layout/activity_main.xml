@@ -2,105 +2,277 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#E0E4E8">
+    android:background="#F3F4F6">
 
-    <!-- แถบเครื่องมือด้านบน (Toolbar) -->
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#1A56DB"
-        android:padding="8dp">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="UniOffice"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_marginEnd="16dp" />
-
-            <Button
-                android:id="@+id/btnModeType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="⌨️ โหมดพิมพ์"
-                android:backgroundTint="#FFFFFF"
-                android:textColor="#1A56DB"
-                android:layout_marginEnd="8dp" />
-
-            <Button
-                android:id="@+id/btnModeDraw"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="✏️ โหมดปากกา"
-                android:backgroundTint="#3B82F6"
-                android:textColor="#FFFFFF"
-                android:layout_marginEnd="8dp" />
-
-            <Button
-                android:id="@+id/btnPenColor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🎨 สีหมึก: น้ำเงิน"
-                android:backgroundTint="#3B82F6"
-                android:textColor="#FFFFFF"
-                android:layout_marginEnd="8dp" />
-
-            <Button
-                android:id="@+id/btnClearDraw"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🧹 ลบเส้นปากกา"
-                android:backgroundTint="#EF4444"
-                android:textColor="#FFFFFF"
-                android:layout_marginEnd="8dp" />
-
-            <Button
-                android:id="@+id/btnExportPdf"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="📄 บันทึก PDF"
-                android:backgroundTint="#10B981"
-                android:textColor="#FFFFFF" />
-        </LinearLayout>
-    </HorizontalScrollView>
-
-    <!-- พื้นที่หน้ากระดาษ A4 จำลอง -->
-    <FrameLayout
-        android:id="@+id/documentContainer"
+    <!-- หน้า 1: หน้าหลักเลือกโปรแกรม (Word / Excel / PowerPoint) -->
+    <LinearLayout
+        android:id="@+id/layoutHomeHub"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="16dp"
-        android:background="#FFFFFF"
-        android:elevation="4dp">
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp"
+        android:visibility="visible">
 
-        <!-- เลเยอร์ 1: พื้นที่พิมพ์ข้อความ -->
-        <EditText
-            android:id="@+id/etDocument"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UniOffice 365"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="#111827"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="เลือกประเภทเอกสารที่ต้องการสร้าง (รองรับปากกา Stylus)"
+            android:textSize="16sp"
+            android:textColor="#4B5563"
+            android:layout_marginBottom="32dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnOpenWord"
+                android:layout_width="0dp"
+                android:layout_height="160dp"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:text="W\n\nWord\nพิมพ์รายงาน"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#185ABD" />
+
+            <Button
+                android:id="@+id/btnOpenExcel"
+                android:layout_width="0dp"
+                android:layout_height="160dp"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:text="X\n\nExcel\nตารางคำนวณ"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#107C41" />
+
+            <Button
+                android:id="@+id/btnOpenPpt"
+                android:layout_width="0dp"
+                android:layout_height="160dp"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:text="P\n\nPowerPoint\nสไลด์นำเสนอ"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#C43E1C" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- หน้า 2: พื้นที่ทำงานหลัก -->
+    <LinearLayout
+        android:id="@+id/layoutEditorWorkspace"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <!-- แถบเครื่องมือด้านบน (Ribbon) -->
+        <HorizontalScrollView
+            android:id="@+id/ribbonHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#185ABD"
+            android:padding="8dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <Button
+                    android:id="@+id/btnBackHome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏠 หน้าหลัก"
+                    android:backgroundTint="#FFFFFF"
+                    android:textColor="#111827"
+                    android:layout_marginEnd="10dp" />
+
+                <TextView
+                    android:id="@+id/tvAppTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Word"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_marginEnd="14dp" />
+
+                <Button
+                    android:id="@+id/btnBold"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:text="B"
+                    android:textStyle="bold"
+                    android:backgroundTint="#3B82F6"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginEnd="4dp" />
+
+                <Button
+                    android:id="@+id/btnItalic"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:text="I"
+                    android:textStyle="italic"
+                    android:backgroundTint="#3B82F6"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginEnd="4dp" />
+
+                <Button
+                    android:id="@+id/btnUnderline"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:text="U"
+                    android:backgroundTint="#3B82F6"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginEnd="6dp" />
+
+                <Button
+                    android:id="@+id/btnAlignCenter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="จัดกึ่งกลาง"
+                    android:backgroundTint="#3B82F6"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginEnd="6dp" />
+
+                <Button
+                    android:id="@+id/btnFontSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ขนาด: 18"
+                    android:backgroundTint="#3B82F6"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginEnd="10dp" />
+
+                <Button
+                    android:id="@+id/btnExcelSum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="∑ ผลรวม (SUM)"
+                    android:backgroundTint="#059669"
+                    android:textColor="#FFFFFF"
+                    android:visibility="gone"
+                    android:layout_marginEnd="10dp" />
+
+                <Button
+                    android:id="@+id/btnPptNextSlide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="➕ สไลด์ถัดไป (1/1)"
+                    android:backgroundTint="#EA580C"
+                    android:textColor="#FFFFFF"
+                    android:visibility="gone"
+                    android:layout_marginEnd="10dp" />
+
+                <Button
+                    android:id="@+id/btnModeType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⌨️ พิมพ์"
+                    android:backgroundTint="#FFFFFF"
+                    android:textColor="#185ABD"
+                    android:layout_marginEnd="6dp" />
+
+                <Button
+                    android:id="@+id/btnModeDraw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✏️ ปากกา"
+                    android:backgroundTint="#3B82F6"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginEnd="6dp" />
+
+                <Button
+                    android:id="@+id/btnPenColor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🎨 น้ำเงิน"
+                    android:backgroundTint="#3B82F6"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginEnd="6dp" />
+
+                <Button
+                    android:id="@+id/btnClearDraw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🧹 ลบเส้น"
+                    android:backgroundTint="#EF4444"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/btnExportPdf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💾 บันทึก PDF"
+                    android:backgroundTint="#10B981"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- พื้นที่หน้ากระดาษทำงาน -->
+        <FrameLayout
+            android:id="@+id/documentContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:gravity="top|start"
-            android:hint="พิมพ์รายงานหรือเลกเชอร์ที่นี่..."
-            android:lineSpacingMultiplier="1.2"
-            android:padding="32dp"
-            android:textColor="#111827"
-            android:textSize="18sp" />
+            android:layout_margin="16dp"
+            android:background="#FFFFFF"
+            android:elevation="4dp">
 
-        <!-- เลเยอร์ 2: กระดานวาดเขียนสำหรับปากกา OPPO Pencil -->
-        <com.unioffice.oppopad.StylusCanvasView
-            android:id="@+id/stylusCanvas"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            <!-- พื้นที่พิมพ์ Word และ PowerPoint -->
+            <EditText
+                android:id="@+id/etDocument"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:gravity="top|start"
+                android:hint="พิมพ์เนื้อหาที่นี่..."
+                android:lineSpacingMultiplier="1.2"
+                android:padding="28dp"
+                android:textColor="#111827"
+                android:textSize="18sp" />
 
-    </FrameLayout>
+            <!-- ตารางคำนวณ Excel -->
+            <ScrollView
+                android:id="@+id/scrollExcel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:padding="8dp">
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TableLayout
+                        android:id="@+id/tableExcel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </HorizontalScrollView>
+            </ScrollView>
 
+            <!-- กระดานวาดเขียนปากกาสไตลัส -->
+            <com.unioffice.oppopad.StylusCanvasView
+                android:id="@+id/stylusCanvas"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+    </LinearLayout>
 </LinearLayout>
