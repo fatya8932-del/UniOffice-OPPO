@@ -1,6 +1,9 @@
 package com.unioffice.oppopad
 
 import android.content.ContentValues
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
@@ -19,6 +22,8 @@ import android.view.View
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
+import androidx.print.PrintHelper
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -37,16 +42,20 @@ class MainActivity : AppCompatActivity() {
     private var textColorIndex = 0
     private val textColors = listOf(Color.parseColor("#DC2626"), Color.parseColor("#185ABD"), Color.parseColor("#107C41"), Color.parseColor("#111827"))
 
+    private var highlightColorIndex = 0
+    private val highlightColors = listOf(Color.YELLOW, Color.parseColor("#86EFAC"), Color.parseColor("#93C5FD"), Color.parseColor("#F9A8D4"))
+
     private var paperColorIndex = 0
     private val paperColors = listOf(Color.WHITE, Color.parseColor("#FEF9C3"), Color.parseColor("#ECFDF5"), Color.parseColor("#EFF6FF"))
 
     private var fontIndex = 0
-    private val fontTypes = listOf(Typeface.SERIF, Typeface.SANS_SERIF, Typeface.MONOSPACE)
-    private val fontNames = listOf("TH Sarabun ▼", "Angsana ▼", "Cordia ▼")
+    private val fontNames = listOf("TH Sarabun ▼", "Prompt ▼", "Kanit ▼", "มาตรฐาน ▼")
+    private lateinit var loadedFonts: List<Typeface?>
 
     private var alignIndex = 0
     private var marginIndex = 0
     private var spacingIndex = 0
+    private var numberCounter = 1
     private var currentFontSize = 18f
 
     private val excelCells = mutableListOf<EditText>()
@@ -77,6 +86,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        loadedFonts = listOf(
+            ResourcesCompat.getFont(this, R.font.sarabun),
+            ResourcesCompat.getFont(this, R.font.prompt),
+            ResourcesCompat.getFont(this, R.font.kanit),
+            Typeface.SANS_SERIF
+        )
         val layoutHomeHub = findViewById<LinearLayout>(R.id.layoutHomeHub)
         val layoutEditorWorkspace = findViewById<LinearLayout>(R.id.layoutEditorWorkspace)
         val ribbonTopScroll = findViewById<HorizontalScrollView>(R.id.ribbonTopScroll)
@@ -87,6 +102,8 @@ class MainActivity : AppCompatActivity() {
         val btnOpenExcel = findViewById<Button>(R.id.btnOpenExcel)
         val btnOpenPpt = findViewById<Button>(R.id.btnOpenPpt)
         val btnBackHome = findViewById<Button>(R.id.btnBackHome)
+        val btnQuickSave = findViewById<Button>(R.id.btnQuickSave)
+        val btnQuickPrint = findViewById<Button>(R.id.btnQuickPrint)
 
         val tabHome = findViewById<Button>(R.id.tabHome)
         val tabInsert = findViewById<Button>(R.id.tabInsert)
@@ -106,14 +123,19 @@ class MainActivity : AppCompatActivity() {
         val btnItalic = findViewById<Button>(R.id.btnItalic)
         val btnUnderline = findViewById<Button>(R.id.btnUnderline)
         val btnStrike = findViewById<Button>(R.id.btnStrike)
+        val btnClearFormat = findViewById<Button>(R.id.btnClearFormat)
         val btnTextColor = findViewById<Button>(R.id.btnTextColor)
         val btnTextHighlight = findViewById<Button>(R.id.btnTextHighlight)
         val btnBulletList = findViewById<Button>(R.id.btnBulletList)
+        val btnNumberList = findViewById<Button>(R.id.btnNumberList)
+        val btnIndent = findViewById<Button>(R.id.btnIndent)
         val btnAlignCycle = findViewById<Button>(R.id.btnAlignCycle)
 
         val btnInsertRealTable = findViewById<Button>(R.id.btnInsertRealTable)
         val btnInsertImage = findViewById<Button>(R.id.btnInsertImage)
+        val btnInsertCallout = findViewById<Button>(R.id.btnInsertCallout)
         val btnInsertDate = findViewById<Button>(R.id.btnInsertDate)
+        val btnInsertSymbol = findViewById<Button>(R.id.btnInsertSymbol)
         val btnInsertDivider = findViewById<Button>(R.id.btnInsertDivider)
         val btnPptAddSlide = findViewById<Button>(R.id.btnPptAddSlide)
 
@@ -130,6 +152,7 @@ class MainActivity : AppCompatActivity() {
         val btnLineSpacing = findViewById<Button>(R.id.btnLineSpacing)
         val btnPaperColor = findViewById<Button>(R.id.btnPaperColor)
 
+        val btnWordCount = findViewById<Button>(R.id.btnWordCount)
         val btnToggleRuler = findViewById<Button>(R.id.btnToggleRuler)
         val btnStartSlideshow = findViewById<Button>(R.id.btnStartSlideshow)
         val btnExitSlideshow = findViewById<Button>(R.id.btnExitSlideshow)
@@ -154,7 +177,7 @@ class MainActivity : AppCompatActivity() {
         val stylusCanvas = findViewById<StylusCanvasView>(R.id.stylusCanvas)
         val documentContainer = findViewById<FrameLayout>(R.id.documentContainer)
 
-        etDocument.typeface = fontTypes[0]
+        etDocument.typeface = loadedFonts[0]
         stylusCanvas.isDrawingEnabled = false
         fun applySpanToSelection(spanFactory: () -> Any) {
             val start = etDocument.selectionStart
@@ -234,6 +257,7 @@ class MainActivity : AppCompatActivity() {
             layoutEditorWorkspace.visibility = View.VISIBLE
             stylusCanvas.clearCanvas()
 
+            val prefs = getSharedPreferences("UniOfficeSaved", Context.MODE_PRIVATE)
             when (mode) {
                 "WORD" -> {
                     themeColorHex = "#185ABD"
@@ -247,6 +271,7 @@ class MainActivity : AppCompatActivity() {
                     pptSlideSidebar.visibility = View.GONE
                     btnPptAddSlide.visibility = View.GONE
                     btnStartSlideshow.visibility = View.GONE
+                    etDocument.setText(prefs.getString("SAVED_WORD", ""))
                 }
                 "EXCEL" -> {
                     themeColorHex = "#107C41"
@@ -274,6 +299,7 @@ class MainActivity : AppCompatActivity() {
                     btnPptAddSlide.visibility = View.VISIBLE
                     btnStartSlideshow.visibility = View.VISIBLE
                     currentSlideIndex = 0
+                    pptSlides[0] = prefs.getString("SAVED_PPT", "") ?: ""
                     etDocument.setText(pptSlides[0])
                     refreshPptSidebar()
                 }
@@ -289,10 +315,24 @@ class MainActivity : AppCompatActivity() {
             layoutEditorWorkspace.visibility = View.GONE
             layoutHomeHub.visibility = View.VISIBLE
         }
+
+        btnQuickSave.setOnClickListener {
+            val prefs = getSharedPreferences("UniOfficeSaved", Context.MODE_PRIVATE).edit()
+            if (currentAppMode == "WORD") {
+                prefs.putString("SAVED_WORD", etDocument.text.toString()).apply()
+            } else if (currentAppMode == "PPT") {
+                prefs.putString("SAVED_PPT", etDocument.text.toString()).apply()
+            }
+            saveTextFileToDownloads(etDocument.text.toString())
+        }
+
+        btnQuickPrint.setOnClickListener {
+            printDocumentView(documentContainer)
+        }
         btnFontFamily.setOnClickListener {
-            fontIndex = (fontIndex + 1) % fontTypes.size
-            btnFontFamily.text = fontNames[fontIndex]
-            etDocument.typeface = fontTypes[fontIndex]
+            fontIndex = (fontIndex + 1) % loadedFonts.size
+            btnFontFamily.text = "ฟอนต์: ${fontNames[fontIndex]}"
+            etDocument.typeface = loadedFonts[fontIndex]
         }
 
         btnFontSize.setOnClickListener {
@@ -304,13 +344,19 @@ class MainActivity : AppCompatActivity() {
                 else -> 18f
             }
             etDocument.textSize = currentFontSize
-            btnFontSize.text = "${currentFontSize.toInt()} ▼"
+            btnFontSize.text = "ขนาด: ${currentFontSize.toInt()} ▼"
         }
 
         btnBold.setOnClickListener { applySpanToSelection { StyleSpan(Typeface.BOLD) } }
         btnItalic.setOnClickListener { applySpanToSelection { StyleSpan(Typeface.ITALIC) } }
         btnUnderline.setOnClickListener { applySpanToSelection { UnderlineSpan() } }
         btnStrike.setOnClickListener { applySpanToSelection { StrikethroughSpan() } }
+
+        btnClearFormat.setOnClickListener {
+            val textOnly = etDocument.text.toString()
+            etDocument.setText(textOnly)
+            Toast.makeText(this, "ล้างรูปแบบตัวอักษรเรียบร้อย", Toast.LENGTH_SHORT).show()
+        }
 
         btnTextColor.setOnClickListener {
             val color = textColors[textColorIndex]
@@ -319,10 +365,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnTextHighlight.setOnClickListener {
-            applySpanToSelection { BackgroundColorSpan(Color.YELLOW) }
+            val color = highlightColors[highlightColorIndex]
+            highlightColorIndex = (highlightColorIndex + 1) % highlightColors.size
+            applySpanToSelection { BackgroundColorSpan(color) }
         }
 
         btnBulletList.setOnClickListener { etDocument.append("\n  • ") }
+        btnNumberList.setOnClickListener { etDocument.append("\n  ${numberCounter++}. ") }
+        btnIndent.setOnClickListener { etDocument.append("      ") }
 
         btnAlignCycle.setOnClickListener {
             alignIndex = (alignIndex + 1) % 3
@@ -344,25 +394,38 @@ class MainActivity : AppCompatActivity() {
                     val cell = EditText(this).apply {
                         hint = if (r == 0) "หัวข้อ ${c + 1}" else "ข้อมูล"
                         textSize = 15f
+                        typeface = loadedFonts[fontIndex]
                         setPadding(14, 10, 14, 10)
                         setBackgroundResource(android.R.drawable.editbox_background)
-                        if (r == 0) setTypeface(null, Typeface.BOLD)
+                        if (r == 0) setTypeface(loadedFonts[fontIndex], Typeface.BOLD)
                     }
                     row.addView(cell)
                 }
                 newTable.addView(row)
             }
             docContentContainer.addView(newTable)
-            Toast.makeText(this, "แทรกตารางจริง 3x4 เรียบร้อย (พิมพ์ในช่องได้ไม่เบี้ยว)", Toast.LENGTH_SHORT).show()
         }
 
-        btnInsertImage.setOnClickListener {
-            pickImageLauncher.launch("image/*")
+        btnInsertImage.setOnClickListener { pickImageLauncher.launch("image/*") }
+
+        btnInsertCallout.setOnClickListener {
+            val box = EditText(this).apply {
+                hint = "📌 พิมพ์ข้อความสรุปสำคัญในกล่องนี้..."
+                setBackgroundColor(Color.parseColor("#EFF6FF"))
+                setPadding(24, 20, 24, 20)
+                textSize = 16f
+                typeface = loadedFonts[fontIndex]
+            }
+            docContentContainer.addView(box)
         }
 
         btnInsertDate.setOnClickListener {
             val dateStr = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date())
-            etDocument.append("\nวันที่บันทึก: $dateStr\n")
+            etDocument.append("\nวันที่: $dateStr\n")
+        }
+
+        btnInsertSymbol.setOnClickListener {
+            etDocument.append(" ∑  √  π  ±  ≠  ≤  ≥  →  ★  ✓ ")
         }
 
         btnInsertDivider.setOnClickListener {
@@ -376,6 +439,7 @@ class MainActivity : AppCompatActivity() {
             etDocument.setText("")
             refreshPptSidebar()
         }
+
         btnPageMargin.setOnClickListener {
             marginIndex = (marginIndex + 1) % 3
             when (marginIndex) {
@@ -397,6 +461,12 @@ class MainActivity : AppCompatActivity() {
         btnPaperColor.setOnClickListener {
             paperColorIndex = (paperColorIndex + 1) % paperColors.size
             documentContainer.setBackgroundColor(paperColors[paperColorIndex])
+        }
+
+        btnWordCount.setOnClickListener {
+            val txt = etDocument.text.toString().trim()
+            val words = if (txt.isEmpty()) 0 else txt.split("\\s+".toRegex()).size
+            Toast.makeText(this, "จำนวนตัวอักษร: ${txt.length} | จำนวนคำ: $words", Toast.LENGTH_LONG).show()
         }
 
         btnToggleRuler.setOnClickListener {
@@ -434,31 +504,10 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "ค่าสูงสุด (MAX) = $max", Toast.LENGTH_LONG).show()
         }
 
-        btnModeType.setOnClickListener {
-            stylusCanvas.isDrawingEnabled = false
-            Toast.makeText(this, "โหมดพิมพ์ข้อความ", Toast.LENGTH_SHORT).show()
-        }
-
-        btnPenTool.setOnClickListener {
-            stylusCanvas.isDrawingEnabled = true
-            stylusCanvas.setPenMode()
-            etDocument.clearFocus()
-            Toast.makeText(this, "ปากกาลูกลื่นพร้อมเขียน", Toast.LENGTH_SHORT).show()
-        }
-
-        btnHighlightTool.setOnClickListener {
-            stylusCanvas.isDrawingEnabled = true
-            stylusCanvas.setHighlighterMode()
-            etDocument.clearFocus()
-            Toast.makeText(this, "ปากกาไฮไลต์พร้อมปาดทับ", Toast.LENGTH_SHORT).show()
-        }
-
-        btnEraserTool.setOnClickListener {
-            stylusCanvas.isDrawingEnabled = true
-            stylusCanvas.setEraserMode()
-            etDocument.clearFocus()
-            Toast.makeText(this, "ยางลบเฉพาะจุด (ลากทับเส้นที่ต้องการลบ)", Toast.LENGTH_SHORT).show()
-        }
+        btnModeType.setOnClickListener { stylusCanvas.isDrawingEnabled = false }
+        btnPenTool.setOnClickListener { stylusCanvas.isDrawingEnabled = true; stylusCanvas.setPenMode(); etDocument.clearFocus() }
+        btnHighlightTool.setOnClickListener { stylusCanvas.isDrawingEnabled = true; stylusCanvas.setHighlighterMode(); etDocument.clearFocus() }
+        btnEraserTool.setOnClickListener { stylusCanvas.isDrawingEnabled = true; stylusCanvas.setEraserMode(); etDocument.clearFocus() }
 
         btnPenColor.setOnClickListener {
             penColorIndex = (penColorIndex + 1) % penColors.size
@@ -472,14 +521,37 @@ class MainActivity : AppCompatActivity() {
             btnPenSize.text = "📏 ขนาด: ${penSizeNames[penSizeIndex]}"
         }
 
-        btnUndoDraw.setOnClickListener {
-            if (!stylusCanvas.undo()) {
-                Toast.makeText(this, "ไม่มีเส้นหมึกให้ย้อนกลับแล้ว", Toast.LENGTH_SHORT).show()
-            }
-        }
-
+        btnUndoDraw.setOnClickListener { stylusCanvas.undo() }
         btnClearDraw.setOnClickListener { stylusCanvas.clearCanvas() }
         btnExportPdf.setOnClickListener { exportToPdf(documentContainer) }
+    }
+
+    private fun printDocumentView(view: FrameLayout) {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+
+        val printHelper = PrintHelper(this)
+        printHelper.scaleMode = PrintHelper.SCALE_MODE_FIT
+        printHelper.printBitmap("UniOffice_${currentAppMode}_Print", bitmap)
+    }
+
+    private fun saveTextFileToDownloads(content: String) {
+        val fileName = "UniOffice_${currentAppMode}_${System.currentTimeMillis()}.txt"
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val values = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "text/plain")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                }
+                val uri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
+                uri?.let { contentResolver.openOutputStream(it)?.use { out -> out.write(content.toByteArray()) } }
+            }
+            Toast.makeText(this, "💾 บันทึกไฟล์งาน ($fileName) สำเร็จ!", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, "บันทึกข้อมูลในแอปเรียบร้อย", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun buildExcelGrid(table: TableLayout, tvCellLabel: TextView, etFormula: EditText) {
@@ -572,7 +644,7 @@ class MainActivity : AppCompatActivity() {
                     pdfDocument.writeTo(outputStream)
                 }
             }
-            Toast.makeText(this, "บันทึก PDF ($currentAppMode) ลงโฟลเดอร์ Downloads สำเร็จ!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "ส่งออก PDF ($currentAppMode) ลงโฟลเดอร์ Downloads สำเร็จ!", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             Toast.makeText(this, "เกิดข้อผิดพลาด: ${e.message}", Toast.LENGTH_LONG).show()
         } finally {
