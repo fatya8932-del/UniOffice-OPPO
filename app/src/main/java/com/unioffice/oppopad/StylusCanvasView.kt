@@ -51,7 +51,8 @@ class StylusCanvasView(context: Context, attrs: AttributeSet?) : View(context, a
 
         // ระบบกันมือโดนจอ (Palm Rejection): รับเฉพาะสัญญาณจากปากกาสไตลัส หรือนิ้วเดียว
         val toolType = event.getToolType(0)
-        if (toolType == MotionEvent.TOOL_TYPE_PALM) {
+       if (toolType == 5 || (toolType == MotionEvent.TOOL_TYPE_FINGER && event.size > 0.15f)) {
+
             return false
         }
 
