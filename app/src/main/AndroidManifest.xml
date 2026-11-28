@@ -4,10 +4,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:allowBackup="true"
-        android:label="UniOffice OPPO"
+         android:allowBackup="true"
+        android:icon="@drawable/ic_launcher_office"
+        android:label="UniOffice 365"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+       
 
 
         <activity
