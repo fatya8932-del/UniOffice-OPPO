@@ -7,7 +7,8 @@
         android:allowBackup="true"
         android:label="UniOffice OPPO"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
 
         <activity
             android:name=".MainActivity"
