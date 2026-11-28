@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="UniOffice 365 Pro"
+            android:text="UniOffice 365 Ultimate"
             android:textSize="32sp"
             android:textStyle="bold"
             android:textColor="#111827"
@@ -27,7 +27,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ชุดโปรแกรมสำนักงานฉบับเต็มสำหรับ OPPO Pad 5 รองรับปากกา Stylus"
+            android:text="ฟอนต์ไทยแท้ 100% | แถบเครื่องมือ 2 แถว | Save &amp; Print | OPPO Pad 5 Stylus"
             android:textSize="15sp"
             android:textColor="#4B5563"
             android:layout_marginBottom="32dp" />
@@ -44,7 +44,7 @@
                 android:layout_height="160dp"
                 android:layout_weight="1"
                 android:layout_margin="10dp"
-                android:text="W\n\nWord\nรายงาน ตาราง รูปภาพ"
+                android:text="W\n\nWord\nเอกสาร &amp; รายงาน"
                 android:textSize="17sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
@@ -56,7 +56,7 @@
                 android:layout_height="160dp"
                 android:layout_weight="1"
                 android:layout_margin="10dp"
-                android:text="X\n\nExcel\nตารางและแถบสูตร fx"
+                android:text="X\n\nExcel\nตาราง &amp; สูตรคำนวณ"
                 android:textSize="17sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
@@ -68,7 +68,7 @@
                 android:layout_height="160dp"
                 android:layout_weight="1"
                 android:layout_margin="10dp"
-                android:text="P\n\nPowerPoint\nสไลด์และนำเสนอ"
+                android:text="P\n\nPowerPoint\nสไลด์ &amp; นำเสนอ"
                 android:textSize="17sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
@@ -90,23 +90,44 @@
             android:background="#185ABD">
 
             <LinearLayout
-                android:id="@+id/ribbonTopBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingHorizontal="10dp"
-                android:paddingTop="6dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="5dp"
                 android:gravity="center_vertical">
 
                 <Button
                     android:id="@+id/btnBackHome"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:text="ไฟล์"
-                    android:textSize="13sp"
+                    android:layout_height="34dp"
+                    android:text="🏠 ไฟล์"
+                    android:textSize="12sp"
                     android:textStyle="bold"
                     android:backgroundTint="#FFFFFF"
                     android:textColor="#185ABD"
+                    android:layout_marginEnd="4dp" />
+
+                <Button
+                    android:id="@+id/btnQuickSave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:text="💾 Save"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#10B981"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginEnd="4dp" />
+
+                <Button
+                    android:id="@+id/btnQuickPrint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:text="🖨️ Print"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#F59E0B"
+                    android:textColor="#FFFFFF"
                     android:layout_marginEnd="10dp" />
 
                 <TextView
@@ -116,61 +137,60 @@
                     android:text="Word"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:layout_marginEnd="14dp" />
+                    android:textSize="15sp"
+                    android:layout_marginEnd="12dp" />
 
                 <Button
                     android:id="@+id/tabHome"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_height="34dp"
                     android:text="หน้าแรก"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
                     android:backgroundTint="#F3F4F6"
                     android:textColor="#185ABD"
-                    android:layout_marginEnd="4dp" />
+                    android:layout_marginEnd="3dp" />
 
                 <Button
                     android:id="@+id/tabInsert"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_height="34dp"
                     android:text="แทรก"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:backgroundTint="#2B6CB0"
                     android:textColor="#FFFFFF"
-                    android:layout_marginEnd="4dp" />
+                    android:layout_marginEnd="3dp" />
 
                 <Button
                     android:id="@+id/tabDraw"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_height="34dp"
                     android:text="วาดเขียน"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:backgroundTint="#2B6CB0"
                     android:textColor="#FFFFFF"
-                    android:layout_marginEnd="4dp" />
+                    android:layout_marginEnd="3dp" />
 
                 <Button
                     android:id="@+id/tabLayout"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_height="34dp"
                     android:text="เค้าโครง"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:backgroundTint="#2B6CB0"
                     android:textColor="#FFFFFF"
-                    android:layout_marginEnd="4dp" />
+                    android:layout_marginEnd="3dp" />
 
                 <Button
                     android:id="@+id/tabView"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_height="34dp"
                     android:text="มุมมอง / นำเสนอ"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:backgroundTint="#2B6CB0"
                     android:textColor="#FFFFFF" />
             </LinearLayout>
         </HorizontalScrollView>
-
         <HorizontalScrollView
             android:id="@+id/ribbonSubBar"
             android:layout_width="match_parent"
@@ -181,216 +201,293 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:orientation="horizontal">
 
-                <!-- 1. แท็บ หน้าแรก (Rich Text คลุมดำเฉพาะคำ) -->
+                <!-- 1. แท็บ หน้าแรก (2 แถว) -->
                 <LinearLayout
                     android:id="@+id/groupHomeTools"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:visibility="visible">
 
-                    <Button
-                        android:id="@+id/btnFontFamily"
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="TH Sarabun ▼"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="4dp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="4dp">
 
-                    <Button
-                        android:id="@+id/btnFontSize"
+                        <Button
+                            android:id="@+id/btnFontFamily"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="ฟอนต์: TH Sarabun ▼"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <Button
+                            android:id="@+id/btnFontSize"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="ขนาด: 18 ▼"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="6dp" />
+
+                        <Button
+                            android:id="@+id/btnBold"
+                            android:layout_width="40dp"
+                            android:layout_height="36dp"
+                            android:text="B"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="2dp" />
+
+                        <Button
+                            android:id="@+id/btnItalic"
+                            android:layout_width="40dp"
+                            android:layout_height="36dp"
+                            android:text="I"
+                            android:textStyle="italic"
+                            android:layout_marginEnd="2dp" />
+
+                        <Button
+                            android:id="@+id/btnUnderline"
+                            android:layout_width="40dp"
+                            android:layout_height="36dp"
+                            android:text="U"
+                            android:layout_marginEnd="2dp" />
+
+                        <Button
+                            android:id="@+id/btnStrike"
+                            android:layout_width="40dp"
+                            android:layout_height="36dp"
+                            android:text="S"
+                            android:layout_marginEnd="6dp" />
+
+                        <Button
+                            android:id="@+id/btnClearFormat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="🧹 ล้างรูปแบบ"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="18 ▼"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="6dp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                    <Button
-                        android:id="@+id/btnBold"
-                        android:layout_width="40dp"
-                        android:layout_height="38dp"
-                        android:text="B"
-                        android:textStyle="bold"
-                        android:layout_marginEnd="2dp" />
+                        <Button
+                            android:id="@+id/btnTextColor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="A สีตัวอักษร"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
 
-                    <Button
-                        android:id="@+id/btnItalic"
-                        android:layout_width="40dp"
-                        android:layout_height="38dp"
-                        android:text="I"
-                        android:textStyle="italic"
-                        android:layout_marginEnd="2dp" />
+                        <Button
+                            android:id="@+id/btnTextHighlight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="🖍️ ไฮไลต์คำ"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
 
-                    <Button
-                        android:id="@+id/btnUnderline"
-                        android:layout_width="40dp"
-                        android:layout_height="38dp"
-                        android:text="U"
-                        android:layout_marginEnd="2dp" />
+                        <Button
+                            android:id="@+id/btnBulletList"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="• หัวข้อย่อย"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
 
-                    <Button
-                        android:id="@+id/btnStrike"
-                        android:layout_width="40dp"
-                        android:layout_height="38dp"
-                        android:text="S"
-                        android:layout_marginEnd="6dp" />
+                        <Button
+                            android:id="@+id/btnNumberList"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="1. ลำดับเลข"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
 
-                    <Button
-                        android:id="@+id/btnTextColor"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="A สีตัวอักษร"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="4dp" />
+                        <Button
+                            android:id="@+id/btnIndent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="⇥ ย่อหน้า"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
 
-                    <Button
-                        android:id="@+id/btnTextHighlight"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="🖍️ ไฮไลต์คำ"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="4dp" />
-
-                    <Button
-                        android:id="@+id/btnBulletList"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="• หัวข้อย่อย"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="4dp" />
-
-                    <Button
-                        android:id="@+id/btnAlignCycle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="ชิดซ้าย"
-                        android:textSize="12sp" />
+                        <Button
+                            android:id="@+id/btnAlignCycle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="ชิดซ้าย"
+                            android:textSize="12sp" />
+                    </LinearLayout>
                 </LinearLayout>
-
+                <!-- 2. แท็บ แทรก (2 แถว) -->
                 <LinearLayout
                     android:id="@+id/groupInsertTools"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:visibility="gone">
 
-                    <Button
-                        android:id="@+id/btnInsertRealTable"
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="⊞ แทรกตารางจริง"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="4dp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="4dp">
 
-                    <Button
-                        android:id="@+id/btnInsertImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="🖼️ แทรกรูปภาพ"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="4dp" />
+                        <Button
+                            android:id="@+id/btnInsertRealTable"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="⊞ ตาราง 3x4"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
 
-                    <Button
-                        android:id="@+id/btnInsertDate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="📅 วันที่"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="4dp" />
+                        <Button
+                            android:id="@+id/btnInsertImage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="🖼️ แทรกรูปภาพ"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
 
-                    <Button
-                        android:id="@+id/btnInsertDivider"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="➖ เส้นคั่น"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="6dp" />
+                        <Button
+                            android:id="@+id/btnInsertCallout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="💬 กล่องสรุป"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
 
-                    <Button
-                        android:id="@+id/btnPptAddSlide"
+                        <Button
+                            android:id="@+id/btnPptAddSlide"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="➕ เพิ่มสไลด์ใหม่"
+                            android:textSize="12sp"
+                            android:backgroundTint="#C43E1C"
+                            android:textColor="#FFFFFF" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="➕ สร้างสไลด์ใหม่"
-                        android:textSize="12sp"
-                        android:backgroundTint="#C43E1C"
-                        android:textColor="#FFFFFF" />
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnInsertDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="📅 วันที่/เวลา"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <Button
+                            android:id="@+id/btnInsertSymbol"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="∑ สัญลักษณ์พิเศษ"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <Button
+                            android:id="@+id/btnInsertDivider"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="➖ เส้นคั่นหน้า"
+                            android:textSize="12sp" />
+                    </LinearLayout>
                 </LinearLayout>
 
+                <!-- 3. แท็บ วาดเขียน (2 แถว) -->
                 <LinearLayout
                     android:id="@+id/groupDrawTools"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:visibility="gone">
 
-                    <Button
-                        android:id="@+id/btnModeType"
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="⌨️ โหมดพิมพ์"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="4dp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="4dp">
 
-                    <Button
-                        android:id="@+id/btnPenTool"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="🖊️ ปากกาลูกลื่น"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="4dp" />
+                        <Button
+                            android:id="@+id/btnModeType"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="⌨️ โหมดพิมพ์"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
 
-                    <Button
-                        android:id="@+id/btnHighlightTool"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="🖍️ ปากกาไฮไลต์"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="4dp" />
+                        <Button
+                            android:id="@+id/btnPenTool"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="🖊️ ปากกาลูกลื่น"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
 
-                    <Button
-                        android:id="@+id/btnEraserTool"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="🧽 ยางลบเฉพาะจุด"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="4dp" />
+                        <Button
+                            android:id="@+id/btnHighlightTool"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="🖍️ ปากกาไฮไลต์"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
 
-                    <Button
-                        android:id="@+id/btnPenColor"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="🎨 หมึก: น้ำเงิน"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="4dp" />
+                        <Button
+                            android:id="@+id/btnEraserTool"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="🧽 ยางลบเฉพาะจุด"
+                            android:textSize="12sp" />
+                    </LinearLayout>
 
-                    <Button
-                        android:id="@+id/btnPenSize"
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="📏 ขนาด: กลาง"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="4dp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                    <Button
-                        android:id="@+id/btnUndoDraw"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="↩️ ย้อนกลับ"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="4dp" />
+                        <Button
+                            android:id="@+id/btnPenColor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="🎨 หมึก: น้ำเงิน"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
 
-                    <Button
-                        android:id="@+id/btnClearDraw"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="🗑️ ล้างกระดาน"
-                        android:textSize="12sp"
-                        android:backgroundTint="#EF4444"
-                        android:textColor="#FFFFFF" />
+                        <Button
+                            android:id="@+id/btnPenSize"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="📏 ขนาด: กลาง"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <Button
+                            android:id="@+id/btnUndoDraw"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="↩️ ย้อนกลับ"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <Button
+                            android:id="@+id/btnClearDraw"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="🗑️ ล้างกระดาน"
+                            android:textSize="12sp"
+                            android:backgroundTint="#EF4444"
+                            android:textColor="#FFFFFF" />
+                    </LinearLayout>
                 </LinearLayout>
+                <!-- 4. แท็บ เค้าโครง -->
                 <LinearLayout
                     android:id="@+id/groupLayoutTools"
                     android:layout_width="wrap_content"
@@ -401,7 +498,7 @@
                     <Button
                         android:id="@+id/btnPageMargin"
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
+                        android:layout_height="40dp"
                         android:text="📏 ระยะขอบ: ปกติ"
                         android:textSize="12sp"
                         android:layout_marginEnd="6dp" />
@@ -409,7 +506,7 @@
                     <Button
                         android:id="@+id/btnLineSpacing"
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
+                        android:layout_height="40dp"
                         android:text="↕️ ระยะห่างบรรทัด: 1.25"
                         android:textSize="12sp"
                         android:layout_marginEnd="6dp" />
@@ -417,11 +514,12 @@
                     <Button
                         android:id="@+id/btnPaperColor"
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
+                        android:layout_height="40dp"
                         android:text="📄 สีพื้นกระดาษ"
                         android:textSize="12sp" />
                 </LinearLayout>
 
+                <!-- 5. แท็บ มุมมอง / นำเสนอ -->
                 <LinearLayout
                     android:id="@+id/groupViewTools"
                     android:layout_width="wrap_content"
@@ -430,9 +528,17 @@
                     android:visibility="gone">
 
                     <Button
+                        android:id="@+id/btnWordCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="🔢 นับจำนวนคำ"
+                        android:textSize="12sp"
+                        android:layout_marginEnd="6dp" />
+
+                    <Button
                         android:id="@+id/btnToggleRuler"
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
+                        android:layout_height="40dp"
                         android:text="📐 เปิด/ปิด ไม้บรรทัด"
                         android:textSize="12sp"
                         android:layout_marginEnd="6dp" />
@@ -440,7 +546,7 @@
                     <Button
                         android:id="@+id/btnStartSlideshow"
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
+                        android:layout_height="40dp"
                         android:text="🖥️ นำเสนอเต็มจอ"
                         android:textSize="12sp"
                         android:backgroundTint="#C43E1C"
@@ -450,8 +556,8 @@
                     <Button
                         android:id="@+id/btnExportPdf"
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:text="💾 ส่งออกเป็น PDF"
+                        android:layout_height="40dp"
+                        android:text="📄 ส่งออก PDF"
                         android:textSize="12sp"
                         android:backgroundTint="#10B981"
                         android:textColor="#FFFFFF" />
@@ -589,7 +695,7 @@
                             android:minHeight="320dp"
                             android:background="@android:color/transparent"
                             android:gravity="top|start"
-                            android:hint="พิมพ์เนื้อหาที่นี่ (ลากคลุมดำคำเพื่อทำตัวหนา/สี/ไฮไลต์เฉพาะคำ)..."
+                            android:hint="พิมพ์เนื้อหาที่นี่ (ลากคลุมดำคำเพื่อจัดรูปแบบเฉพาะจุด)..."
                             android:lineSpacingMultiplier="1.25"
                             android:textColor="#111827"
                             android:textSize="18sp" />
