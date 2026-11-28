@@ -2,19 +2,22 @@ package com.unioffice.oppopad
 
 import android.content.ContentValues
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.InputType
+import android.text.Spannable
 import android.text.TextWatcher
+import android.text.style.*
 import android.view.Gravity
 import android.view.View
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
 import java.io.FileOutputStream
@@ -24,12 +27,15 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private var penColorIndex = 0
-    private val penColors = listOf(Color.BLUE, Color.RED, Color.BLACK, Color.parseColor("#107C41"))
-    private val penColorNames = listOf("น้ำเงิน", "แดง", "ดำ", "เขียว")
+    private val penColors = listOf(Color.BLUE, Color.RED, Color.BLACK, Color.parseColor("#107C41"), Color.parseColor("#EAB308"))
+    private val penColorNames = listOf("น้ำเงิน", "แดง", "ดำ", "เขียว", "เหลือง")
+
+    private var penSizeIndex = 1
+    private val penSizes = listOf(3f, 6f, 12f)
+    private val penSizeNames = listOf("เล็ก", "กลาง", "ใหญ่")
 
     private var textColorIndex = 0
-    private val textColors = listOf(Color.parseColor("#111827"), Color.parseColor("#185ABD"), Color.parseColor("#DC2626"), Color.parseColor("#107C41"))
-    private val textColorNames = listOf("A สีดำ", "A น้ำเงิน", "A สีแดง", "A สีเขียว")
+    private val textColors = listOf(Color.parseColor("#DC2626"), Color.parseColor("#185ABD"), Color.parseColor("#107C41"), Color.parseColor("#111827"))
 
     private var paperColorIndex = 0
     private val paperColors = listOf(Color.WHITE, Color.parseColor("#FEF9C3"), Color.parseColor("#ECFDF5"), Color.parseColor("#EFF6FF"))
@@ -41,10 +47,6 @@ class MainActivity : AppCompatActivity() {
     private var alignIndex = 0
     private var marginIndex = 0
     private var spacingIndex = 0
-    private var isBold = false
-    private var isItalic = false
-    private var isUnderline = false
-    private var isStrike = false
     private var currentFontSize = 18f
 
     private val excelCells = mutableListOf<EditText>()
@@ -55,6 +57,21 @@ class MainActivity : AppCompatActivity() {
     private var currentSlideIndex = 0
     private var currentAppMode = "WORD"
     private var themeColorHex = "#185ABD"
+
+    private lateinit var docContentContainer: LinearLayout
+
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            val imageView = ImageView(this).apply {
+                setImageURI(it)
+                adjustViewBounds = true
+                maxHeight = 650
+                setPadding(0, 16, 0, 16)
+            }
+            docContentContainer.addView(imageView)
+            Toast.makeText(this, "แทรกรูปภาพเรียบร้อย!", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,23 +107,28 @@ class MainActivity : AppCompatActivity() {
         val btnUnderline = findViewById<Button>(R.id.btnUnderline)
         val btnStrike = findViewById<Button>(R.id.btnStrike)
         val btnTextColor = findViewById<Button>(R.id.btnTextColor)
-        val btnHighlightPaper = findViewById<Button>(R.id.btnHighlightPaper)
+        val btnTextHighlight = findViewById<Button>(R.id.btnTextHighlight)
         val btnBulletList = findViewById<Button>(R.id.btnBulletList)
         val btnAlignCycle = findViewById<Button>(R.id.btnAlignCycle)
 
-        val btnInsertTable = findViewById<Button>(R.id.btnInsertTable)
-        val btnInsertTextBox = findViewById<Button>(R.id.btnInsertTextBox)
+        val btnInsertRealTable = findViewById<Button>(R.id.btnInsertRealTable)
+        val btnInsertImage = findViewById<Button>(R.id.btnInsertImage)
         val btnInsertDate = findViewById<Button>(R.id.btnInsertDate)
         val btnInsertDivider = findViewById<Button>(R.id.btnInsertDivider)
         val btnPptAddSlide = findViewById<Button>(R.id.btnPptAddSlide)
 
         val btnModeType = findViewById<Button>(R.id.btnModeType)
-        val btnModeDraw = findViewById<Button>(R.id.btnModeDraw)
+        val btnPenTool = findViewById<Button>(R.id.btnPenTool)
+        val btnHighlightTool = findViewById<Button>(R.id.btnHighlightTool)
+        val btnEraserTool = findViewById<Button>(R.id.btnEraserTool)
         val btnPenColor = findViewById<Button>(R.id.btnPenColor)
+        val btnPenSize = findViewById<Button>(R.id.btnPenSize)
+        val btnUndoDraw = findViewById<Button>(R.id.btnUndoDraw)
         val btnClearDraw = findViewById<Button>(R.id.btnClearDraw)
 
         val btnPageMargin = findViewById<Button>(R.id.btnPageMargin)
         val btnLineSpacing = findViewById<Button>(R.id.btnLineSpacing)
+        val btnPaperColor = findViewById<Button>(R.id.btnPaperColor)
 
         val btnToggleRuler = findViewById<Button>(R.id.btnToggleRuler)
         val btnStartSlideshow = findViewById<Button>(R.id.btnStartSlideshow)
@@ -124,6 +146,8 @@ class MainActivity : AppCompatActivity() {
         val pptSlideSidebar = findViewById<ScrollView>(R.id.pptSlideSidebar)
         val pptSlideListContainer = findViewById<LinearLayout>(R.id.pptSlideListContainer)
 
+        val scrollDocument = findViewById<ScrollView>(R.id.scrollDocument)
+        docContentContainer = findViewById(R.id.docContentContainer)
         val etDocument = findViewById<EditText>(R.id.etDocument)
         val scrollExcel = findViewById<ScrollView>(R.id.scrollExcel)
         val tableExcel = findViewById<TableLayout>(R.id.tableExcel)
@@ -132,6 +156,16 @@ class MainActivity : AppCompatActivity() {
 
         etDocument.typeface = fontTypes[0]
         stylusCanvas.isDrawingEnabled = false
+        fun applySpanToSelection(spanFactory: () -> Any) {
+            val start = etDocument.selectionStart
+            val end = etDocument.selectionEnd
+            if (start >= 0 && end > start) {
+                etDocument.text.setSpan(spanFactory(), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            } else {
+                Toast.makeText(this, "กรุณาลากคลุมดำข้อความที่ต้องการจัดรูปแบบก่อนครับ", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         fun selectRibbonTab(tabIndex: Int) {
             groupHomeTools.visibility = if (tabIndex == 0) View.VISIBLE else View.GONE
             groupInsertTools.visibility = if (tabIndex == 1) View.VISIBLE else View.GONE
@@ -206,21 +240,20 @@ class MainActivity : AppCompatActivity() {
                     tvAppTitle.text = "Word"
                     ribbonTopScroll.setBackgroundColor(Color.parseColor(themeColorHex))
                     btnBackHome.setTextColor(Color.parseColor(themeColorHex))
-                    etDocument.visibility = View.VISIBLE
+                    scrollDocument.visibility = View.VISIBLE
                     scrollExcel.visibility = View.GONE
                     excelFormulaBar.visibility = View.GONE
                     tvWordRuler.visibility = View.VISIBLE
                     pptSlideSidebar.visibility = View.GONE
                     btnPptAddSlide.visibility = View.GONE
                     btnStartSlideshow.visibility = View.GONE
-                    etDocument.hint = "พิมพ์รายงานหรือเลกเชอร์ที่นี่..."
                 }
                 "EXCEL" -> {
                     themeColorHex = "#107C41"
                     tvAppTitle.text = "Excel"
                     ribbonTopScroll.setBackgroundColor(Color.parseColor(themeColorHex))
                     btnBackHome.setTextColor(Color.parseColor(themeColorHex))
-                    etDocument.visibility = View.GONE
+                    scrollDocument.visibility = View.GONE
                     scrollExcel.visibility = View.VISIBLE
                     excelFormulaBar.visibility = View.VISIBLE
                     tvWordRuler.visibility = View.GONE
@@ -233,7 +266,7 @@ class MainActivity : AppCompatActivity() {
                     tvAppTitle.text = "PowerPoint"
                     ribbonTopScroll.setBackgroundColor(Color.parseColor(themeColorHex))
                     btnBackHome.setTextColor(Color.parseColor(themeColorHex))
-                    etDocument.visibility = View.VISIBLE
+                    scrollDocument.visibility = View.VISIBLE
                     scrollExcel.visibility = View.GONE
                     excelFormulaBar.visibility = View.GONE
                     tvWordRuler.visibility = View.GONE
@@ -242,7 +275,6 @@ class MainActivity : AppCompatActivity() {
                     btnStartSlideshow.visibility = View.VISIBLE
                     currentSlideIndex = 0
                     etDocument.setText(pptSlides[0])
-                    etDocument.hint = "คลิกเพื่อเพิ่มชื่อเรื่องและเนื้อหาสไลด์..."
                     refreshPptSidebar()
                 }
             }
@@ -257,25 +289,10 @@ class MainActivity : AppCompatActivity() {
             layoutEditorWorkspace.visibility = View.GONE
             layoutHomeHub.visibility = View.VISIBLE
         }
-
-        fun updateTextStyle() {
-            val style = when {
-                isBold && isItalic -> Typeface.BOLD_ITALIC
-                isBold -> Typeface.BOLD
-                isItalic -> Typeface.ITALIC
-                else -> Typeface.NORMAL
-            }
-            etDocument.setTypeface(fontTypes[fontIndex], style)
-            var flags = etDocument.paintFlags
-            flags = if (isUnderline) (flags or Paint.UNDERLINE_TEXT_FLAG) else (flags and Paint.UNDERLINE_TEXT_FLAG.inv())
-            flags = if (isStrike) (flags or Paint.STRIKE_THRU_TEXT_FLAG) else (flags and Paint.STRIKE_THRU_TEXT_FLAG.inv())
-            etDocument.paintFlags = flags
-        }
-
         btnFontFamily.setOnClickListener {
             fontIndex = (fontIndex + 1) % fontTypes.size
             btnFontFamily.text = fontNames[fontIndex]
-            updateTextStyle()
+            etDocument.typeface = fontTypes[fontIndex]
         }
 
         btnFontSize.setOnClickListener {
@@ -290,20 +307,19 @@ class MainActivity : AppCompatActivity() {
             btnFontSize.text = "${currentFontSize.toInt()} ▼"
         }
 
-        btnBold.setOnClickListener { isBold = !isBold; updateTextStyle() }
-        btnItalic.setOnClickListener { isItalic = !isItalic; updateTextStyle() }
-        btnUnderline.setOnClickListener { isUnderline = !isUnderline; updateTextStyle() }
-        btnStrike.setOnClickListener { isStrike = !isStrike; updateTextStyle() }
+        btnBold.setOnClickListener { applySpanToSelection { StyleSpan(Typeface.BOLD) } }
+        btnItalic.setOnClickListener { applySpanToSelection { StyleSpan(Typeface.ITALIC) } }
+        btnUnderline.setOnClickListener { applySpanToSelection { UnderlineSpan() } }
+        btnStrike.setOnClickListener { applySpanToSelection { StrikethroughSpan() } }
 
         btnTextColor.setOnClickListener {
+            val color = textColors[textColorIndex]
             textColorIndex = (textColorIndex + 1) % textColors.size
-            etDocument.setTextColor(textColors[textColorIndex])
-            btnTextColor.text = textColorNames[textColorIndex]
+            applySpanToSelection { ForegroundColorSpan(color) }
         }
 
-        btnHighlightPaper.setOnClickListener {
-            paperColorIndex = (paperColorIndex + 1) % paperColors.size
-            documentContainer.setBackgroundColor(paperColors[paperColorIndex])
+        btnTextHighlight.setOnClickListener {
+            applySpanToSelection { BackgroundColorSpan(Color.YELLOW) }
         }
 
         btnBulletList.setOnClickListener { etDocument.append("\n  • ") }
@@ -317,12 +333,31 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        btnInsertTable.setOnClickListener {
-            etDocument.append("\n┌──────────┬──────────┬──────────┐\n│ หัวข้อ 1   │ หัวข้อ 2   │ หัวข้อ 3   │\n├──────────┼──────────┼──────────┤\n│ ข้อมูล     │ ข้อมูล     │ ข้อมูล     │\n└──────────┴──────────┴──────────┘\n")
+        btnInsertRealTable.setOnClickListener {
+            val newTable = TableLayout(this).apply {
+                isStretchAllColumns = true
+                setPadding(0, 16, 0, 16)
+            }
+            for (r in 0..3) {
+                val row = TableRow(this)
+                for (c in 0..2) {
+                    val cell = EditText(this).apply {
+                        hint = if (r == 0) "หัวข้อ ${c + 1}" else "ข้อมูล"
+                        textSize = 15f
+                        setPadding(14, 10, 14, 10)
+                        setBackgroundResource(android.R.drawable.editbox_background)
+                        if (r == 0) setTypeface(null, Typeface.BOLD)
+                    }
+                    row.addView(cell)
+                }
+                newTable.addView(row)
+            }
+            docContentContainer.addView(newTable)
+            Toast.makeText(this, "แทรกตารางจริง 3x4 เรียบร้อย (พิมพ์ในช่องได้ไม่เบี้ยว)", Toast.LENGTH_SHORT).show()
         }
 
-        btnInsertTextBox.setOnClickListener {
-            etDocument.append("\n╔════════════════════════════╗\n║  พิมพ์ข้อความสำคัญในกรอบนี้  ║\n╚════════════════════════════╝\n")
+        btnInsertImage.setOnClickListener {
+            pickImageLauncher.launch("image/*")
         }
 
         btnInsertDate.setOnClickListener {
@@ -341,13 +376,12 @@ class MainActivity : AppCompatActivity() {
             etDocument.setText("")
             refreshPptSidebar()
         }
-
         btnPageMargin.setOnClickListener {
             marginIndex = (marginIndex + 1) % 3
             when (marginIndex) {
-                0 -> { etDocument.setPadding(28, 28, 28, 28); btnPageMargin.text = "📏 ระยะขอบ: ปกติ" }
-                1 -> { etDocument.setPadding(12, 12, 12, 12); btnPageMargin.text = "📏 ระยะขอบ: แคบ" }
-                2 -> { etDocument.setPadding(56, 40, 56, 40); btnPageMargin.text = "📏 ระยะขอบ: กว้าง" }
+                0 -> { docContentContainer.setPadding(24, 24, 24, 24); btnPageMargin.text = "📏 ระยะขอบ: ปกติ" }
+                1 -> { docContentContainer.setPadding(10, 10, 10, 10); btnPageMargin.text = "📏 ระยะขอบ: แคบ" }
+                2 -> { docContentContainer.setPadding(52, 36, 52, 36); btnPageMargin.text = "📏 ระยะขอบ: กว้าง" }
             }
         }
 
@@ -360,6 +394,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        btnPaperColor.setOnClickListener {
+            paperColorIndex = (paperColorIndex + 1) % paperColors.size
+            documentContainer.setBackgroundColor(paperColors[paperColorIndex])
+        }
+
         btnToggleRuler.setOnClickListener {
             tvWordRuler.visibility = if (tvWordRuler.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         }
@@ -369,7 +408,6 @@ class MainActivity : AppCompatActivity() {
             ribbonSubBar.visibility = View.GONE
             pptSlideSidebar.visibility = View.GONE
             btnExitSlideshow.visibility = View.VISIBLE
-            Toast.makeText(this, "เข้าสู่โหมดนำเสนอเต็มจอ", Toast.LENGTH_SHORT).show()
         }
 
         btnExitSlideshow.setOnClickListener {
@@ -401,16 +439,43 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "โหมดพิมพ์ข้อความ", Toast.LENGTH_SHORT).show()
         }
 
-        btnModeDraw.setOnClickListener {
+        btnPenTool.setOnClickListener {
             stylusCanvas.isDrawingEnabled = true
+            stylusCanvas.setPenMode()
             etDocument.clearFocus()
-            Toast.makeText(this, "โหมดปากกา Stylus พร้อมวาดเขียน", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "ปากกาลูกลื่นพร้อมเขียน", Toast.LENGTH_SHORT).show()
+        }
+
+        btnHighlightTool.setOnClickListener {
+            stylusCanvas.isDrawingEnabled = true
+            stylusCanvas.setHighlighterMode()
+            etDocument.clearFocus()
+            Toast.makeText(this, "ปากกาไฮไลต์พร้อมปาดทับ", Toast.LENGTH_SHORT).show()
+        }
+
+        btnEraserTool.setOnClickListener {
+            stylusCanvas.isDrawingEnabled = true
+            stylusCanvas.setEraserMode()
+            etDocument.clearFocus()
+            Toast.makeText(this, "ยางลบเฉพาะจุด (ลากทับเส้นที่ต้องการลบ)", Toast.LENGTH_SHORT).show()
         }
 
         btnPenColor.setOnClickListener {
             penColorIndex = (penColorIndex + 1) % penColors.size
             stylusCanvas.setPenColor(penColors[penColorIndex])
             btnPenColor.text = "🎨 หมึก: ${penColorNames[penColorIndex]}"
+        }
+
+        btnPenSize.setOnClickListener {
+            penSizeIndex = (penSizeIndex + 1) % penSizes.size
+            stylusCanvas.setStrokeWidth(penSizes[penSizeIndex])
+            btnPenSize.text = "📏 ขนาด: ${penSizeNames[penSizeIndex]}"
+        }
+
+        btnUndoDraw.setOnClickListener {
+            if (!stylusCanvas.undo()) {
+                Toast.makeText(this, "ไม่มีเส้นหมึกให้ย้อนกลับแล้ว", Toast.LENGTH_SHORT).show()
+            }
         }
 
         btnClearDraw.setOnClickListener { stylusCanvas.clearCanvas() }
