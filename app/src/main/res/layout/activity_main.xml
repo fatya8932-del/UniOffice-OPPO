@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://android.com"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#E5E7EB">
 
-    <!-- หน้า 1: หน้าหลักเลือกโปรแกรม (Home Hub) -->
     <LinearLayout
         android:id="@+id/layoutHomeHub"
         android:layout_width="match_parent"
@@ -77,7 +76,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- หน้า 2: พื้นที่ทำงานหลักแบบ Microsoft Office 365 -->
     <LinearLayout
         android:id="@+id/layoutEditorWorkspace"
         android:layout_width="match_parent"
@@ -85,7 +83,6 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <!-- แถบเมนู Ribbon หลัก (6 หมวดหมู่เหมือน Office แท้) -->
         <HorizontalScrollView
             android:id="@+id/ribbonTopScroll"
             android:layout_width="match_parent"
@@ -174,7 +171,6 @@
             </LinearLayout>
         </HorizontalScrollView>
 
-        <!-- แถบเครื่องมือย่อยของ Ribbon (เปลี่ยนชุดเครื่องมือตามแท็บที่เลือก) -->
         <HorizontalScrollView
             android:id="@+id/ribbonSubBar"
             android:layout_width="match_parent"
@@ -188,7 +184,6 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
 
-                <!-- 1. แท็บ หน้าแรก (Home): ฟอนต์, ขนาด, B I U S, สี, ย่อหน้า, หัวข้อย่อย -->
                 <LinearLayout
                     android:id="@+id/groupHomeTools"
                     android:layout_width="wrap_content"
@@ -249,7 +244,6 @@
                         android:text="A สีดำ ▼"
                         android:textSize="12sp"
                         android:layout_marginEnd="4dp" />
-
                     <Button
                         android:id="@+id/btnHighlightPaper"
                         android:layout_width="wrap_content"
@@ -274,7 +268,6 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
-                <!-- 2. แท็บ แทรก (Insert) -->
                 <LinearLayout
                     android:id="@+id/groupInsertTools"
                     android:layout_width="wrap_content"
@@ -324,7 +317,6 @@
                         android:textColor="#FFFFFF" />
                 </LinearLayout>
 
-                <!-- 3. แท็บ วาดเขียน (Draw) -->
                 <LinearLayout
                     android:id="@+id/groupDrawTools"
                     android:layout_width="wrap_content"
@@ -366,7 +358,6 @@
                         android:textColor="#FFFFFF" />
                 </LinearLayout>
 
-                <!-- 4. แท็บ เค้าโครง (Layout) -->
                 <LinearLayout
                     android:id="@+id/groupLayoutTools"
                     android:layout_width="wrap_content"
@@ -390,7 +381,6 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
-                <!-- 5. แท็บ มุมมอง / นำเสนอ (View) -->
                 <LinearLayout
                     android:id="@+id/groupViewTools"
                     android:layout_width="wrap_content"
@@ -427,8 +417,6 @@
                 </LinearLayout>
             </LinearLayout>
         </HorizontalScrollView>
-
-        <!-- แถบสูตร Excel (Formula Bar fx) -->
         <LinearLayout
             android:id="@+id/excelFormulaBar"
             android:layout_width="match_parent"
@@ -500,7 +488,6 @@
                 android:textColor="#FFFFFF" />
         </LinearLayout>
 
-        <!-- ไม้บรรทัด Word (Word Ruler 1 - 16 cm) -->
         <TextView
             android:id="@+id/tvWordRuler"
             android:layout_width="match_parent"
@@ -512,13 +499,11 @@
             android:gravity="center"
             android:visibility="visible" />
 
-        <!-- พื้นที่ทำงานตรงกลาง (แถบสไลด์ซ้าย + หน้ากระดาษขวา) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <!-- แถบสไลด์ขนาดย่อด้านซ้าย (PowerPoint Sidebar) -->
             <ScrollView
                 android:id="@+id/pptSlideSidebar"
                 android:layout_width="130dp"
@@ -534,7 +519,6 @@
                     android:orientation="vertical" />
             </ScrollView>
 
-            <!-- หน้ากระดาษเอกสาร / ตาราง / สไลด์ -->
             <FrameLayout
                 android:id="@+id/documentContainer"
                 android:layout_width="0dp"
@@ -591,3 +575,4 @@
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
+
